@@ -7,25 +7,30 @@
 #define MICROPY_HW_ENABLE_SERVO     (1)
 #define MICROPY_HW_ENABLE_DAC       (1)
 #define MICROPY_HW_ENABLE_ADC       (1)
-#define MICROPY_HW_ENABLE_SPI2      (1)
-#define MICROPY_HW_ENABLE_SPI4      (1)
 #define MICROPY_HW_ENABLE_USB       (1)
 #define MICROPY_HW_ENABLE_SDCARD    (1)
+#define MICROPY_HW_HAS_SWITCH       (1)
 #define MICROPY_FATFS_EXFAT         (1)
 
 // The board has an 25MHz HSE, the following gives 400MHz CPU speed
-#define MICROPY_HW_CLK_PLLM (5)
-#define MICROPY_HW_CLK_PLLN (160)
-#define MICROPY_HW_CLK_PLLP (2)
-#define MICROPY_HW_CLK_PLLQ (4)
-#define MICROPY_HW_CLK_PLLR (2)
+#define MICROPY_HW_CLK_PLLM         (5)
+#define MICROPY_HW_CLK_PLLN         (160)
+#define MICROPY_HW_CLK_PLLP         (2)
+#define MICROPY_HW_CLK_PLLQ         (4)
+#define MICROPY_HW_CLK_PLLR         (2)
+#define MICROPY_HW_CLK_PLLVCI       (RCC_PLL1VCIRANGE_1)
+#define MICROPY_HW_CLK_PLLVCO       (RCC_PLL1VCOWIDE)
+#define MICROPY_HW_CLK_PLLFRAC      (0)
 
 // The USB clock is set using PLL3
-#define MICROPY_HW_CLK_PLL3M (5)
-#define MICROPY_HW_CLK_PLL3N (48)
-#define MICROPY_HW_CLK_PLL3P (2)
-#define MICROPY_HW_CLK_PLL3Q (5)
-#define MICROPY_HW_CLK_PLL3R (2)
+#define MICROPY_HW_CLK_PLL3M        (5)
+#define MICROPY_HW_CLK_PLL3N        (48)
+#define MICROPY_HW_CLK_PLL3P        (2)
+#define MICROPY_HW_CLK_PLL3Q        (5)
+#define MICROPY_HW_CLK_PLL3R        (2)
+#define MICROPY_HW_CLK_PLL3VCI      (RCC_PLL3VCIRANGE_1)
+#define MICROPY_HW_CLK_PLL3VCO      (RCC_PLL3VCOWIDE)
+#define MICROPY_HW_CLK_PLL3FRAC     (0)
 
 #define MICROPY_HW_FLASH_LATENCY    FLASH_LATENCY_7 // 210-216 MHz needs 7 wait states
 
@@ -89,18 +94,22 @@
 
 // LEDs
 #define MICROPY_HW_LED1             (pin_E3) // blue
-
-#define MICROPY_HW_LED_OTYPE        (GPIO_MODE_OUTPUT_PP)
 // NOTE: LEDs are active high.
-#define MICROPY_HW_LED_OFF(pin)     (pin->gpio->BSRR = (pin->pin_mask << 16))
-#define MICROPY_HW_LED_ON(pin)      (pin->gpio->BSRR = pin->pin_mask)
+#define MICROPY_HW_LED_ON(pin)      (mp_hal_pin_high(pin))
+#define MICROPY_HW_LED_OFF(pin)     (mp_hal_pin_low(pin))
+
+// USRSW is pulled low. Pressing the button makes the input go high.
+#define MICROPY_HW_USRSW_PIN        (pin_C13)
+#define MICROPY_HW_USRSW_PULL       (GPIO_PULLDOWN)
+#define MICROPY_HW_USRSW_EXTI_MODE  (GPIO_MODE_IT_RISING)
+#define MICROPY_HW_USRSW_PRESSED    (1)
 
 // Servos
 #define PYB_SERVO_NUM (4)
 
 // Use external SPI flash for storage
-#define MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE (0)
-#define MICROPY_HW_SPIFLASH_ENABLE_CACHE         (1)
+#define MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE    (0)
+#define MICROPY_HW_SPIFLASH_ENABLE_CACHE            (1)
 
 // SPI Flash 64MBits
 #define MICROPY_HW_SPIFLASH_SIZE_BITS (64 * 1024 * 1024)
@@ -110,16 +119,15 @@
 #define MICROPY_HW_SPIFLASH_MOSI    (pin_D7)
 
 // QSPI Flash 64MBits
-#define MICROPY_HW_QSPIFLASH_SIZE_BITS   (64 * 1024 * 1024)
 #define MICROPY_HW_QSPIFLASH_SIZE_BITS_LOG2 (26)
-#define MICROPY_HW_QSPIFLASH_CS         (pin_B6)
-#define MICROPY_HW_QSPIFLASH_SCK        (pin_B2)
-#define MICROPY_HW_QSPIFLASH_IO0        (pin_D11)
-#define MICROPY_HW_QSPIFLASH_IO1        (pin_D12)
-#define MICROPY_HW_QSPIFLASH_IO2        (pin_E2)
-#define MICROPY_HW_QSPIFLASH_IO3        (pin_D13)
+#define MICROPY_HW_QSPIFLASH_CS             (pin_B6)
+#define MICROPY_HW_QSPIFLASH_SCK            (pin_B2)
+#define MICROPY_HW_QSPIFLASH_IO0            (pin_D11)
+#define MICROPY_HW_QSPIFLASH_IO1            (pin_D12)
+#define MICROPY_HW_QSPIFLASH_IO2            (pin_E2)
+#define MICROPY_HW_QSPIFLASH_IO3            (pin_D13)
 
-#define MICROPY_HW_QSPI_PRESCALER       2
+#define MICROPY_HW_QSPI_PRESCALER           2
 
 // block device config for SPI flash
 extern const struct _mp_spiflash_config_t spiflash_config;
